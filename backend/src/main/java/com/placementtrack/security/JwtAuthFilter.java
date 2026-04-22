@@ -6,18 +6,27 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    // ← ithை add pannu — /api/code/ ku filter skip aagum
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/api/auth/")
+                || path.startsWith("/api/code/");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -32,7 +41,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 Long userId = jwtUtil.getUserIdFromToken(token);
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(email, userId, new ArrayList<>());
+                        new UsernamePasswordAuthenticationToken(
+                                email,
+                                userId,
+                                List.of(new SimpleGrantedAuthority("ROLE_STUDENT"))
+                        );
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface CompanyQuestionRepository extends JpaRepository<CompanyQuestion, Long> {
     List<CompanyQuestion> findByCompanyIgnoreCase(String company);
-    List<CompanyQuestion> findByCompanyIgnoreCaseAndQuestionType(String company, CompanyQuestion.QuestionType type);
+    List<CompanyQuestion> findByCompanyIgnoreCaseAndQuestionType(String company, String questionType);
 }

@@ -1,51 +1,53 @@
 package com.placementtrack.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-
 public class AuthDto {
 
-    @Data
     public static class RegisterRequest {
-        @NotBlank
-        @Size(min = 2, max = 100)
         private String name;
-
-        @NotBlank
-        @Email
         private String email;
-
-        @NotBlank
-        @Size(min = 6, max = 100)
         private String password;
+
+        public String getName() { return name; }
+        public String getEmail() { return email; }
+        public String getPassword() { return password; }
+        public void setName(String name) { this.name = name; }
+        public void setEmail(String email) { this.email = email; }
+        public void setPassword(String password) { this.password = password; }
     }
 
-    @Data
     public static class LoginRequest {
-        @NotBlank
-        @Email
         private String email;
-
-        @NotBlank
         private String password;
+
+        public String getEmail() { return email; }
+        public String getPassword() { return password; }
+        public void setEmail(String email) { this.email = email; }
+        public void setPassword(String password) { this.password = password; }
     }
 
-    @Data
     public static class AuthResponse {
         private String token;
         private Long studentId;
         private String name;
         private String email;
         private Boolean profileCompleted;
+        private String role;
 
-        public AuthResponse(String token, Long studentId, String name, String email, Boolean profileCompleted) {
+        public AuthResponse(String token, Long studentId, String name,
+                            String email, Boolean profileCompleted, String role) {
             this.token = token;
             this.studentId = studentId;
             this.name = name;
             this.email = email;
             this.profileCompleted = profileCompleted;
+            this.role = role;
         }
+
+        public String getToken() { return token; }
+        public Long getStudentId() { return studentId; }
+        public String getName() { return name; }
+        public String getEmail() { return email; }
+        public Boolean getProfileCompleted() { return profileCompleted; }
+        public String getRole() { return role; }
     }
 }

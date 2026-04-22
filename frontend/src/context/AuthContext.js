@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getMe } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -8,29 +7,36 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      getMe()
-        .then(res => setUser(res.data))
-        .catch(() => localStorage.removeItem('token'))
-        .finally(() => setLoading(false));
-    } else {
+    try {
+      const token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+      if (token && savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+    } catch {
+      localStorage.clear();
+    } finally {
       setLoading(false);
     }
   }, []);
 
   const loginUser = (userData, token) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.clear();
     setUser(null);
   };
 
+  const isAdmin = () => user?.role === 'ADMIN';
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loginUser, logout, loading }}>
+    <AuthContext.Provider value={{
+      user, setUser, loginUser, logout, loading, isAdmin
+    }}>
       {children}
     </AuthContext.Provider>
   );

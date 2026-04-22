@@ -1,5 +1,4 @@
 package com.placementtrack.security;
-
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +44,11 @@ public class JwtUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return claims.get("userId", Long.class);
+        Object userId = claims.get("userId");
+        if (userId instanceof Integer) {
+            return ((Integer) userId).longValue();
+        }
+        return (Long) userId;
     }
 
     public boolean validateToken(String token) {

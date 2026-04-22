@@ -2,7 +2,7 @@ package com.placementtrack.service;
 
 import com.placementtrack.dto.AuthDto;
 import com.placementtrack.model.Student;
-import com.placementtrack.repository.StudentRepository;
+import com.placementtrack.repository.StudentRepository; // Use StudentRepository consistently
 import com.placementtrack.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentRepository studentRepository; // Ensuring this matches your repository folder
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -21,6 +21,7 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
     public AuthDto.AuthResponse register(AuthDto.RegisterRequest request) {
+        // Email check using StudentRepository
         if (studentRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
@@ -28,26 +29,44 @@ public class AuthService {
         Student student = new Student();
         student.setName(request.getName());
         student.setEmail(request.getEmail());
+        // Encrypting password before saving
         student.setPassword(passwordEncoder.encode(request.getPassword()));
         student.setProfileCompleted(false);
+        student.setRole(Student.Role.STUDENT);
 
         student = studentRepository.save(student);
 
         String token = jwtUtil.generateToken(student.getEmail(), student.getId());
-        return new AuthDto.AuthResponse(token, student.getId(), student.getName(),
-                                        student.getEmail(), student.getProfileCompleted());
+
+        return new AuthDto.AuthResponse(
+                token,
+                student.getId(),
+                student.getName(),
+                student.getEmail(),
+                student.getProfileCompleted(),
+                student.getRole().name()
+        );
     }
 
     public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
+        // Finding student by email
         Student student = studentRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
+        // Comparing plain password with BCrypt hash from DB
         if (!passwordEncoder.matches(request.getPassword(), student.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
         String token = jwtUtil.generateToken(student.getEmail(), student.getId());
-        return new AuthDto.AuthResponse(token, student.getId(), student.getName(),
-                                        student.getEmail(), student.getProfileCompleted());
+
+        return new AuthDto.AuthResponse(
+                token,
+                student.getId(),
+                student.getName(),
+                student.getEmail(),
+                student.getProfileCompleted(),
+                student.getRole().name()
+        );
     }
 }

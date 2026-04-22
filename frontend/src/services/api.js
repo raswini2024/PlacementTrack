@@ -40,4 +40,14 @@ export const startMockTest = (testType) => api.get(`/interview/mock-test/start/$
 export const submitMockTest = (data) => api.post('/interview/mock-test/submit', data);
 export const getMockTestHistory = () => api.get('/interview/mock-test/history');
 
+// Mock Interview
+export const findInterviewPartner = () => api.post('/mock-interview/find-partner');
+export const checkSessionStatus = (sessionId) => api.get(`/mock-interview/session/${sessionId}/status`);
+export const submitInterviewFeedback = (sessionId, data) => api.post(`/mock-interview/session/${sessionId}/feedback`, data);
+export const getInterviewHistory = () => api.get('/mock-interview/history');
+export const cancelSession = (sessionId) => api.delete(`/mock-interview/session/${sessionId}/cancel`);
+
+export const getExamPapers = (company) => api.get(`/exam/papers/${company}`);
+export const getPaperQuestions = (paperId) => api.get(`/exam/papers/${paperId}/questions`);
+export const submitPaper = (paperId, answers) => api.post(`/exam/papers/${paperId}/submit`, answers);
 export default api;

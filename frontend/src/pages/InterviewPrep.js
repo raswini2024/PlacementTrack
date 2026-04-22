@@ -11,10 +11,17 @@ export default function InterviewPrep() {
   const [activeTab, setActiveTab] = useState('hr');
 
   useEffect(() => {
-    getHrQuestions().then(res => {
-      setQuestions(res.data);
-      setLoading(false);
-    }).catch(console.error);
+    getHrQuestions()
+      .then(res => {
+        const data = Array.isArray(res.data) 
+          ? res.data 
+          : res.data.content || res.data.data || [];
+        setQuestions(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   const TIPS = [

@@ -1,15 +1,9 @@
 package com.placementtrack.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "company_questions")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class CompanyQuestion {
 
     @Id
@@ -22,9 +16,8 @@ public class CompanyQuestion {
     @Column(name = "question_text", columnDefinition = "TEXT", nullable = false)
     private String questionText;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "question_type")
-    private QuestionType questionType;
+    @Column(name = "question_type", length = 50)
+    private String questionType;
 
     @Column(name = "year_asked")
     private Integer yearAsked;
@@ -32,7 +25,22 @@ public class CompanyQuestion {
     @Column(name = "answer_hint", columnDefinition = "TEXT")
     private String answerHint;
 
-    public enum QuestionType {
-        Technical, HR, Aptitude, Programming
-    }
+    @Column(length = 20)
+    private String difficulty = "Easy";
+
+    public Long getId() { return id; }
+    public String getCompany() { return company; }
+    public String getQuestionText() { return questionText; }
+    public String getQuestionType() { return questionType; }
+    public Integer getYearAsked() { return yearAsked; }
+    public String getAnswerHint() { return answerHint; }
+    public String getDifficulty() { return difficulty; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setCompany(String company) { this.company = company; }
+    public void setQuestionText(String questionText) { this.questionText = questionText; }
+    public void setQuestionType(String questionType) { this.questionType = questionType; }
+    public void setYearAsked(Integer yearAsked) { this.yearAsked = yearAsked; }
+    public void setAnswerHint(String answerHint) { this.answerHint = answerHint; }
+    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
 }

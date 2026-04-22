@@ -9,11 +9,13 @@ const navItems = [
   { section: 'Practice', items: [
     { path: '/aptitude', icon: '🧮', label: 'Aptitude' },
     { path: '/programming', icon: '💻', label: 'Programming' },
+    { path: '/coding', icon: '⌨️', label: 'Coding Challenges' },
     { path: '/mock-tests', icon: '📝', label: 'Mock Tests' },
   ]},
   { section: 'Interview', items: [
     { path: '/interview-prep', icon: '🎤', label: 'Interview Prep' },
     { path: '/company-questions', icon: '🏢', label: 'Previous Year Qs' },
+    { path: '/mock-interview', icon: '🤝', label: 'Mock Interview' },
   ]},
   { section: 'Tools', items: [
     { path: '/resume', icon: '📄', label: 'Resume Analyzer' },
@@ -44,7 +46,7 @@ export default function Sidebar() {
           </div>
         </div>
       ))}
-      <div className="sidebar-label" style={{marginTop:'1rem'}}>Account</div>
+      <div className="sidebar-label" style={{ marginTop: '1rem' }}>Account</div>
       <div className="sidebar-section">
         <button className="sidebar-item" onClick={() => { logout(); navigate('/'); }}>
           <span className="icon">🚪</span> Logout

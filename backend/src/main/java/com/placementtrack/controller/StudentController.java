@@ -5,7 +5,6 @@ import com.placementtrack.dto.ProgressDto;
 import com.placementtrack.model.Student;
 import com.placementtrack.model.StudentProfile;
 import com.placementtrack.service.StudentService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,11 +24,16 @@ public class StudentController {
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<?> saveProfile(@Valid @RequestBody ProfileDto dto, Authentication auth) {
+    public ResponseEntity<?> saveProfile(@RequestBody ProfileDto dto, Authentication auth) {
         try {
             Long studentId = getUserId(auth);
+            System.out.println("STUDENT ID: " + studentId);
+            System.out.println("AUTH CREDS: " + auth.getCredentials());
             StudentProfile profile = studentService.saveProfile(studentId, dto);
-            return ResponseEntity.ok(Map.of("message", "Profile saved successfully", "profile", profile));
+            return ResponseEntity.ok(Map.of(
+                    "message", "Profile saved successfully",
+                    "profile", profile
+            ));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
@@ -52,10 +56,11 @@ public class StudentController {
             Long studentId = getUserId(auth);
             Student student = studentService.getStudent(studentId);
             return ResponseEntity.ok(Map.of(
-                "id", student.getId(),
-                "name", student.getName(),
-                "email", student.getEmail(),
-                "profileCompleted", student.getProfileCompleted()
+                    "id", student.getId(),
+                    "name", student.getName(),
+                    "email", student.getEmail(),
+                    "profileCompleted", student.getProfileCompleted(),
+                    "role", student.getRole().name()
             ));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

@@ -97,3 +97,28 @@ export default function ProfileSetup() {
     </div>
   );
 }
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    if (!form.preferredLanguage || !form.dreamCompany || !form.dreamRole || !form.skillLevel) {
+      setError('Please fill all fields.'); return;
+    }
+    setLoading(true);
+    
+    // Debug add பண்ணு
+    const token = localStorage.getItem('token');
+    console.log('Token before profile save:', token);
+    console.log('User:', user);
+    
+    try {
+      const res = await saveProfile(form);
+      console.log('Profile saved:', res.data);
+      setUser({ ...user, profileCompleted: true });
+      navigate('/dashboard');
+    } catch (err) {
+      console.log('Profile error:', err.response);
+      setError(err.response?.data?.error || 'Failed to save profile.');
+    } finally {
+      setLoading(false);
+    }
+  };
